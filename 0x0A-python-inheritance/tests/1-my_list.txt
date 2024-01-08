@@ -1,53 +1,62 @@
-1-my_list.txt
+Test Documentation for 1-my_list.py
+===================================
 
-# Testing MyList class
+This is a test file for the MyList class in the 1-my_list module.
 
-```python
-#!/usr/bin/python3
+Test Cases:
+------------
 
-class MyList(list):
-    """
-    MyList class inherits from list.
+Case 0: Importing the Class
+>>> MyList = __import__('1-my_list').MyList
 
-    Public instance method:
-    - def print_sorted(self): prints the list, but sorted (ascending sort).
+Case 1: Common Case
+>>> my_list = MyList()
+>>> my_list.extend([1, 4, 2, 3, 5])
+>>> print(my_list)
+[1, 4, 2, 3, 5]
+>>> my_list.print_sorted()
+[1, 2, 3, 4, 5]
+>>> print(my_list)
+[1, 4, 2, 3, 5]
 
-    Example:
-    >>> my_list = MyList()
-    >>> my_list.append(1)
-    >>> my_list.append(4)
-    >>> my_list.append(2)
-    >>> my_list.append(3)
-    >>> my_list.append(5)
+Case 2: Undefined Object
+>>> my_list2.print_sorted()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'my_list2' is not defined
 
-    # Initial state of the list
-    >>> print(my_list)
-    [1, 4, 2, 3, 5]
+Case 3: List as Argument
+>>> a = [1, 9, 4]
+>>> my_list = MyList(a)
+>>> my_list.print_sorted()
+[1, 4, 9]
 
-    # Sorting and printing the list
-    >>> my_list.print_sorted()
-    [1, 2, 3, 4, 5]
+Case 4: Empty List
+>>> a = []
+>>> my_list = MyList(a)
+>>> my_list.print_sorted()
+[]
 
-    # The original list remains unchanged
-    >>> print(my_list)
-    [1, 4, 2, 3, 5]
-    """
+Case 5: Single Element
+>>> my_list = MyList([1])
+>>> my_list.print_sorted()
+[1]
+>>> print(my_list)
+[1]
 
-    def print_sorted(self):
-        """Prints the list, but sorted (ascending sort)."""
-        print(sorted(self))
+Case 6: Duplicate Elements
+>>> my_list2 = MyList([1, 1, 1, 1])
+>>> my_list2.print_sorted()
+[1, 1, 1, 1]
 
-if __name__ == "__main__":
-    my_list = MyList()
-    my_list.append(1)
-    my_list.append(4)
-    my_list.append(2)
-    my_list.append(3)
-    my_list.append(5)
+Case 7: Parent Object
+>>> my_list = [1, 2, 3]
+>>> my_list.print_sorted()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'list' object has no attribute 'print_sorted'
 
-    # Initial state of the list
-    print(my_list)
-    # Sorting and printing the list
-    my_list.print_sorted()
-    # The original list remains unchanged
-    print(my_list)
+Case 8: Negative Numbers
+>>> my_list = MyList([5, 1, -1, 51, -5])
+>>> my_list.print_sorted()
+[-5, -1, 1, 5, 51]
