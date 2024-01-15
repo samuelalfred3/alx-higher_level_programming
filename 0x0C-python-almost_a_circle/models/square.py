@@ -1,57 +1,72 @@
 #!/usr/bin/python3
-"""
-Module for the Square class.
-"""
+"""square module"""
 from models.rectangle import Rectangle
 
-class Square(Rectangle):
-    """
-    Square class, inherits from Rectangle.
-    """
-    def __init__(self, size, x=0, y=0, id=None):
-        """
-        Constructor for Square class.
 
-        Args:
-            size (int): Size of the square.
-            x (int): X-coordinate of the square's position.
-            y (int): Y-coordinate of the square's position.
-            id (int): Optional id to be assigned.
-        """
+class Square(Rectangle):
+    """defines the class square"""
+
+    def __init__(self, size, x=0, y=0, id=None):
+        """initializes a square"""
         super().__init__(size, size, x, y, id)
+
+    def __str__(self):
+        """string representation of a square"""
+        r = "[{}] ({}) ".format(self.__class__.__name__, self.id)
+        c = "{}/{} - {}".format(self.x, self.y, self.width)
+        return r + c
 
     @property
     def size(self):
-        """Getter for size."""
+        """getter for size"""
         return self.width
 
     @size.setter
     def size(self, value):
-        """Setter for size."""
+        """setter for size"""
+        if type(value) != int:
+            raise TypeError("width must be an integer")
+        if value <= 0:
+            raise ValueError("width must be > 0")
         self.width = value
         self.height = value
 
     def update(self, *args, **kwargs):
-        """
-        Update the attributes of the Square.
-
-        Args:
-            *args: Variable number of arguments in the order (id, size, x, y).
-            **kwargs: Variable number of keyword arguments.
-        """
-        if args:
-            attributes = ["id", "size", "x", "y"]
-            for i, arg in enumerate(args):
-                setattr(self, attributes[i], arg)
+        """update square that assigns attributes to args"""
+        if args and len(args) != 0:
+            for i in range(len(args)):
+                if i == 0:
+                    if args[i] is None:
+                        self.__init__(
+                                self.width, self.width, self.x, self.y)
+                    else:
+                        self.id = args[i]
+                if i == 1:
+                    self.width = args[i]
+                    self.height = args[i]
+                if i == 2:
+                    self.x = args[i]
+                if i == 3:
+                    self.y = args[i]
         else:
-            for key, value in kwargs.items():
-                setattr(self, key, value)
+            if kwargs and len(kwargs) != 0:
+                for key, value in kwargs.items():
+                    if key == "id":
+                        if value is None:
+                            self.__init__(
+                                    self.width, self.width, self.x, self.y)
+                        else:
+                            self.id = value
+                    elif key == "size":
+                        self.width = value
+                        self.height = value
+                    elif key == "x":
+                        self.x = value
+                    elif key == "y":
+                        self.y = value
 
-    def __str__(self):
-        """
-        Return a string representation of the square.
-
-        Returns:
-            str: Formatted string.
-        """
-        return "[Square] ({}) {}/{} - {}".format(self.id, self.x, self.y, self.width)
+    def to_dictionary(self):
+        """returns dictionary representation
+        of a square"""
+        return {"id": self.id, "size": self.size,
+                "x": self.x, "y": self.y}
