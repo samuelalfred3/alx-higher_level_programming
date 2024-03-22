@@ -1,25 +1,22 @@
 #!/usr/bin/python3
-""" Prints the State object with the name passed as an argument from the database """
-import sys
+"""List all states"""
+from sys import argv
 from relationship_state import Base, State
 from relationship_city import City
-from sqlalchemy import create_engine
+from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: {} <username> <password> <database>".format(sys.argv[0]))
-        sys.exit(1)
+    engine = create_engine(
+        'mysql+mysqldb://{}:{}@localhost/{}'
+        .format(argv[1], argv[2],
+                argv[3]), pool_pre_ping=True)
 
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
-                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
-    
     Session = sessionmaker(bind=engine)
     session = Session()
-    
-    for instance in session.query(State).order_by(State.id):
-        print(instance.id, instance.name, sep=": ")
-        for city_ins in instance.cities:
-            print("    ", end="")
-            print(city_ins.id, city_ins.name, sep=": ")
+
+    for state in session.query(State).order_by(State.id):
+        print("{}: {}".format(state.id, state.name))
+        for city in state.cities:
+            print("\t{}: {}".format(city.id, city.name))
 
