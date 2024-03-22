@@ -1,42 +1,20 @@
 #!/usr/bin/python3
-import sys
+"""Lists states"""
+
 import MySQLdb
-
-"""
-Script that takes in an argument and displays all values in the states table of hbtn_0e_0_usa
-where name matches the argument.
-"""
-
-"""
-Function to filter states by name
-"""
-def filter_states(username, password, database, state_name):
-    """
-    Connect to MySQL database
-    """
-    db = MySQLdb.connect(host="localhost",
-                         user=username,
-                         passwd=password,
-                         db=database,
-                         port=3306)
-    """
-    Create a cursor object
-    """
-    cur = db.cursor()
-    cur.execute("SELECT * FROM states WHERE name LIKE %s COLLATE utf8mb4_general_ci ORDER BY id ASC", (state_name,))
-    """
-    Print the fetched results
-    """
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
-    cur.close()
-    db.close()
+from sys import argv
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: {} username password database state_name".format(sys.argv[0]))
-        exit(1)
-    username, password, database, state_name = sys.argv[1:]
-    filter_states(username, password, database, state_name)
+    conn = MySQLdb.connect(host="localhost", port=3306, user=argv[1],
+                           passwd=argv[2], db=argv[3], charset="utf8")
+    cur = conn.cursor()
+    query = """
+SELECT * FROM states WHERE name LIKE BINARY '{}' ORDER BY states.id ASC"""
+    query = query.format(argv[4])
+    cur.execute(query)
+    query_rows = cur.fetchall()
+    for row in query_rows:
+        print(row)
+    cur.close()
+    conn.close()
 
